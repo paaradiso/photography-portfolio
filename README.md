@@ -45,7 +45,7 @@ tags:
 ## Development
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/photography-portfolio.git
+   git clone https://github.com/paaradiso/photography-portfolio.git
    ```
 2. **Install dependencies**:
    ```bash
