@@ -5,4 +5,7 @@
 	let { children } = $props();
 </script>
 
-{@render children()}
+<div class="container flex flex-col justify-center items-center my-16 max-w-[42rem]">
+	<img src="/logo-main.svg" alt="logo" class="h-8" />
+	{@render children()}
+</div>
