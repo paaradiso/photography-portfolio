@@ -9,7 +9,7 @@
 		floorThreshold?: number;
 	}
 
-	const { photo, class: htmlClass, width, floorThreshold = 100 }: Props = $props();
+	const { photo, class: htmlClass, width, floorThreshold = 50 }: Props = $props();
 
 	const IMAGE_QUALITY = 90;
 
