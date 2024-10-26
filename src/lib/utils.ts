@@ -58,7 +58,7 @@ export const flyAndScale = (
 };
 
 export function isImageFile(filename: string) {
-	return /\.(jpg|jpeg|png|gif|bmp|webp|tiff|svg)$/i.test(filename);
+	return /\.(jpg|jpeg|png|gif|bmp|webp|tiff)$/i.test(filename);
 }
 
 export function getFileFolder(key: string) {

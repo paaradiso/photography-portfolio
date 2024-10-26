@@ -18,8 +18,6 @@
 
 	let isModalOpen = $state(false);
 
-	$inspect(isModalOpen);
-
 	function openModal(photo: Photo) {
 		selectedPhoto = photo;
 		isModalOpen = true;

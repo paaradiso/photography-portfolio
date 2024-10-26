@@ -5,7 +5,7 @@
 
 	interface Props {
 		isOpen: boolean;
-		photo: Photo;
+		photo: Photo | null;
 	}
 	let { isOpen = $bindable(), photo = $bindable() }: Props = $props();
 
@@ -14,12 +14,10 @@
 		photo = null;
 	}
 
-	$inspect(photo);
-
 	let publicUrl = $derived(publicPhotoUrl(photo?.key ?? ''));
 </script>
 
-{#if isOpen}
+{#if isOpen && photo}
 	<div class="fixed top-4 left-4 z-50 text-white flex flex-col gap-1 w-64 text-sm">
 		<p>
 			{photo.folderTitle}
