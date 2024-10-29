@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TagAccordion from '$lib/components/TagAccordion.svelte';
+	import FilterAccordion from '$lib/components/FilterAccordion.svelte';
 	import WeservImage from '$lib/components/WeservImage.svelte';
 	import ImageModal from '$lib/components/ImageModal.svelte';
 	import type { Photo } from '$lib/types';
@@ -16,10 +16,9 @@
 	let smWidth: number = $state(0) as number;
 	let width: number = $state(0) as number;
 
-	$inspect(smWidth, width);
-
 	let selectedTags: string[] = $state([]);
 	let selectedPhoto: Photo | null = $state(null);
+	let selectedFolder: string | null = $state(null);
 
 	let isModalOpen = $state(false);
 
@@ -28,14 +27,23 @@
 		isModalOpen = true;
 	}
 
-	const columns = [
-		data.photos.filter((_, i) => i % 3 === 0),
-		data.photos.filter((_, i) => i % 3 === 1),
-		data.photos.filter((_, i) => i % 3 === 2)
-	];
+	const filteredPhotos = $derived(
+		data.photos.filter((photo) => photo.key.startsWith(selectedFolder ?? ''))
+	);
+
+	let selectedFolderPretty: string | null = $derived(
+		selectedFolder && filteredPhotos[0].folderTitle
+	);
+	$inspect(selectedFolderPretty);
+
+	const columns = $derived([
+		filteredPhotos.filter((_, i) => i % 3 === 0),
+		filteredPhotos.filter((_, i) => i % 3 === 1),
+		filteredPhotos.filter((_, i) => i % 3 === 2)
+	]);
 </script>
 
-<TagAccordion tags={data.tags} bind:selectedTags />
+<FilterAccordion tags={data.tags} bind:selectedTags bind:selectedFolder {selectedFolderPretty} />
 
 {#snippet photoSnippet(photo, width)}
 	{#if selectedTags.length === 0 || selectedTags.some((tag) => photo.tags.includes(tag))}
@@ -50,23 +58,27 @@
 	{/if}
 {/snippet}
 
-<div
-	class="sm:hidden flex flex-col gap-2 justify-center items-center w-full mt-4"
-	bind:clientWidth={smWidth}
->
-	{#each data.photos as photo}
-		{@render photoSnippet(photo, smWidth)}
-	{/each}
-</div>
+{#key filteredPhotos}
+	<div
+		class="sm:hidden flex flex-col gap-2 justify-center items-center w-full mt-4"
+		bind:clientWidth={smWidth}
+	>
+		{#each filteredPhotos as photo}
+			{@render photoSnippet(photo, smWidth)}
+		{/each}
+	</div>
+{/key}
 
-<div class="hidden sm:visible sm:flex gap-2 w-full mt-4" bind:clientWidth={width}>
-	{#each columns as column}
-		<div class="flex flex-col gap-2">
-			{#each column as photo}
-				{@render photoSnippet(photo, width)}
-			{/each}
-		</div>
-	{/each}
-</div>
+{#key columns}
+	<div class="hidden sm:visible sm:flex gap-2 w-full mt-4" bind:clientWidth={width}>
+		{#each columns as column}
+			<div class="flex flex-col gap-2">
+				{#each column as photo}
+					{@render photoSnippet(photo, width)}
+				{/each}
+			</div>
+		{/each}
+	</div>
+{/key}
 
-<ImageModal bind:isOpen={isModalOpen} bind:photo={selectedPhoto} />
+<ImageModal bind:isOpen={isModalOpen} bind:photo={selectedPhoto} bind:selectedFolder />

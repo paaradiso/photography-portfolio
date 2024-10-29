@@ -1,20 +1,27 @@
 <script lang="ts">
 	import type { Photo } from '$lib/types';
 	import { X } from 'lucide-svelte';
-	import { publicPhotoUrl } from '$lib/utils';
+	import { publicPhotoUrl, getFileFolder } from '$lib/utils';
 
 	interface Props {
 		isOpen: boolean;
 		photo: Photo | null;
+		selectedFolder: string | null;
 	}
-	let { isOpen = $bindable(), photo = $bindable() }: Props = $props();
+	let { isOpen = $bindable(), photo = $bindable(), selectedFolder = $bindable() }: Props = $props();
 
 	function closeModal() {
 		isOpen = false;
 		photo = null;
 	}
 
+	function selectFolder() {
+		selectedFolder = folder;
+		closeModal();
+	}
+
 	let publicUrl = $derived(publicPhotoUrl(photo?.key ?? ''));
+	let folder = $derived(getFileFolder(photo?.key ?? ''));
 </script>
 
 {#if isOpen && photo}
@@ -31,6 +38,13 @@
 			{photo.folderDate}
 		</p>
 	</div>
+
+	<button
+		onclick={() => selectFolder()}
+		class="fixed bottom-4 left-4 z-50 text-white flex flex-col gap-1 text-sm"
+	>
+		View Collection
+	</button>
 
 	<button onclick={() => closeModal()} class="fixed top-4 right-4 z-50">
 		<X size="36" color="white" />
