@@ -27,7 +27,7 @@
 		isModalOpen = true;
 	}
 
-	const filteredPhotos = $derived(
+	let filteredPhotos = $derived(
 		data.photos.filter((photo) => photo.key.startsWith(selectedFolder ?? ''))
 	);
 
@@ -36,7 +36,7 @@
 	);
 	$inspect(selectedFolderPretty);
 
-	const columns = $derived([
+	let columns = $derived([
 		filteredPhotos.filter((_, i) => i % 3 === 0),
 		filteredPhotos.filter((_, i) => i % 3 === 1),
 		filteredPhotos.filter((_, i) => i % 3 === 2)
