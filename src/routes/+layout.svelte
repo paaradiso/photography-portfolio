@@ -10,7 +10,7 @@
 	let { children } = $props();
 </script>
 
-<div class="container flex flex-col justify-center items-center my-16 max-w-[40rem]">
+<div class="container flex flex-col justify-center items-center my-16 max-w-[48rem]">
 	<img src={logoUrl} alt="logo" class="h-8" />
 	{@render children()}
 </div>
