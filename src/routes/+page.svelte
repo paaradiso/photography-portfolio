@@ -13,7 +13,6 @@
 
 	let { data }: Props = $props();
 
-	let smWidth: number = $state(0) as number;
 	let width: number = $state(0) as number;
 
 	let selectedTags: string[] = $state([]);
@@ -34,46 +33,28 @@
 	let selectedFolderPretty: string | null = $derived(
 		selectedFolder && filteredPhotos[0].folderTitle
 	);
-
-	let columns = $derived([
-		filteredPhotos.filter((_, i) => i % 3 === 0),
-		filteredPhotos.filter((_, i) => i % 3 === 1),
-		filteredPhotos.filter((_, i) => i % 3 === 2)
-	]);
 </script>
 
 <FilterAccordion tags={data.tags} bind:selectedTags bind:selectedFolder {selectedFolderPretty} />
 
-{#snippet photoSnippet(photos, width)}
-	{#each photos as photo}
-		{#if selectedTags.length === 0 || selectedTags.some((tag) => photo.tags.includes(tag))}
-			<button
-				onclick={() => {
-					openModal(photo);
-				}}
-				class="w-full min-w-full h-auto"
-			>
-				<WeservImage {photo} class="w-full min-w-full h-auto" {width} />
-			</button>
-		{/if}
-	{/each}
-{/snippet}
-
 {#key filteredPhotos}
 	<div
-		class="sm:hidden flex flex-col gap-2 justify-center items-center w-full mt-4"
-		bind:clientWidth={smWidth}
+		class="sm:max-md:columns-1 md:max-lg:columns-2 lg:columns-3 gap-2 w-full mt-4"
+		bind:clientWidth={width}
 	>
-		{@render photoSnippet(filteredPhotos, smWidth)}
-	</div>
-{/key}
-
-{#key columns}
-	<div class="hidden sm:visible sm:flex gap-2 w-full mt-4" bind:clientWidth={width}>
-		{#each columns as column}
-			<div class="flex flex-col gap-2">
-				{@render photoSnippet(column, width)}
-			</div>
+		{#each filteredPhotos as photo}
+			{#if selectedTags.length === 0 || selectedTags.some((tag) => photo.tags.includes(tag))}
+				<button
+					onclick={() => {
+						openModal(photo);
+					}}
+					class="w-full min-w-full h-auto"
+				>
+					{#if width > 0}
+						<WeservImage {photo} class="w-full min-w-full h-auto" {width} />
+					{/if}
+				</button>
+			{/if}
 		{/each}
 	</div>
 {/key}

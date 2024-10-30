@@ -3,8 +3,8 @@ import { parse } from 'yaml';
 import { isImageFile, getFileFolder, getFileName } from '$lib/utils';
 import type { PhotoEntry, FolderMetadata, PhotoMetadata, Photo } from '$lib/types';
 
-export async function getTags(file: string = 'metadata.yaml'): Promise<string[]> {
-	const metadata = await getStringObject(file);
+export async function getTags(): Promise<string[]> {
+	const metadata = await getStringObject('metadata.yaml');
 	const tags = (parse(metadata).tags as unknown[])
 		.map((tag) => String(tag))
 		.sort((a, b) => a.localeCompare(b));
