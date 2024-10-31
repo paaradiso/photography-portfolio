@@ -1,7 +1,7 @@
 import { getStringObject, listObjects } from '$lib/s3';
 import { parse } from 'yaml';
 import { isImageFile, getFileFolder, getFileName } from '$lib/utils';
-import type { PhotoEntry, FolderMetadata, PhotoMetadata, Photo } from '$lib/types';
+import type { FolderMetadata, PhotoMetadata, Photo } from '$lib/types';
 
 export async function getTags(): Promise<string[]> {
 	const metadata = await getStringObject('metadata.yaml');
