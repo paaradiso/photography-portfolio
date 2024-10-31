@@ -21,15 +21,12 @@ export async function getObject(key: string) {
 		Bucket: S3_BUCKET,
 		Key: key
 	});
-
 	const response = await s3.send(command);
-
 	return response.Body;
 }
 
 export async function getStringObject(key: string): Promise<string> {
 	const object = await getObject(key);
-
 	return object.transformToString();
 }
 
@@ -38,7 +35,6 @@ export async function listObjects(prefix?: string): Promise<_Object[]> {
 		Bucket: S3_BUCKET,
 		Prefix: prefix
 	});
-
 	const response = await s3.send(command);
 	return response.Contents ?? [];
 }
