@@ -11,9 +11,15 @@ export async function getTags(): Promise<string[]> {
 	return tags;
 }
 
+async function getFolderMetadata(folder: string): Promise<FolderMetadata> {
+	const metadataKey = `${folder}/metadata.yaml`;
+	const data = await getStringObject(metadataKey);
+	return parse(data) as FolderMetadata;
+}
+
 export async function listPhotos(): Promise<Photo[]> {
-	const photos = await listObjects();
-	const photoKeys = photos
+	const objects = await listObjects();
+	const photoKeys = objects
 		.map((photo) => photo.Key)
 		.filter((key): key is string => key !== undefined && isImageFile(key));
 
@@ -26,16 +32,22 @@ export async function listPhotos(): Promise<Photo[]> {
 		folderMap.get(folder)?.push(key);
 	});
 
-	const result: Photo[] = [];
-	for (const [folder, keys] of folderMap) {
-		const metadataKey = `${folder}/metadata.yaml`;
-		const folderMetadata = parse(await getStringObject(metadataKey)) as FolderMetadata;
-		for (const key of keys) {
-			const metadata = await getPhotoMetadata(key, folderMetadata);
-			result.push({ key, ...metadata });
-		}
-	}
-	return result;
+	const folders = Array.from(folderMap.keys());
+	const folderMetadatas = await Promise.all(folders.map((folder) => getFolderMetadata(folder)));
+
+	const folderMetadataMap = new Map(
+		folders.map((folder, index) => [folder, folderMetadatas[index]])
+	);
+
+	const photoPromises = Array.from(folderMap.entries()).flatMap(([folder, keys]) => {
+		const folderMetadata = folderMetadataMap.get(folder)!;
+		return keys.map(async (key) => ({
+			key,
+			...(await getPhotoMetadata(key, folderMetadata))
+		}));
+	});
+
+	return Promise.all(photoPromises);
 }
 
 export async function getPhotoMetadata(
@@ -46,8 +58,7 @@ export async function getPhotoMetadata(
 	const fileName = getFileName(key);
 
 	if (!folderMetadata) {
-		const metadataKey = `${folder}/metadata.yaml`;
-		folderMetadata = parse(await getStringObject(metadataKey)) as FolderMetadata;
+		folderMetadata = await getFolderMetadata(folder);
 	}
 
 	const photoMetadata = folderMetadata.photos?.[fileName];
@@ -59,5 +70,6 @@ export async function getPhotoMetadata(
 		folderDescription: folderMetadata.description,
 		folderDate: folderMetadata.date
 	};
+
 	return metadataObject;
 }
