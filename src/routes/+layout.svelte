@@ -14,7 +14,7 @@
 	let { children } = $props();
 </script>
 
-{#if PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID}
+{#if PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID !== ''}
 	<GoogleAnalytics measurementId={PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID} />
 {/if}
 
