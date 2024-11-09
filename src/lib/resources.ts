@@ -5,9 +5,7 @@ import type { FolderMetadata, PhotoMetadata, Photo } from '$lib/types';
 
 export async function getTags(): Promise<string[]> {
 	const metadata = await getStringObject('metadata.yaml');
-	const tags = (parse(metadata).tags as unknown[])
-		.map((tag) => String(tag))
-		.sort((a, b) => a.localeCompare(b));
+	const tags = (parse(metadata).tags as unknown[]).map(String).sort((a, b) => a.localeCompare(b));
 	return tags;
 }
 
