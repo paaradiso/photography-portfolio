@@ -20,4 +20,10 @@
 	);
 </script>
 
-<img loading="lazy" src={weservUrl} alt={photo.title || photo.folderTitle} class={htmlClass} />
+<img
+	loading="lazy"
+	src={weservUrl}
+	alt={photo.title || photo.folderTitle}
+	class={htmlClass}
+	width={flooredWidth}
+/>

@@ -38,10 +38,7 @@
 <FilterAccordion tags={data.tags} bind:selectedTags bind:selectedFolder {selectedFolderPretty} />
 
 {#key filteredPhotos}
-	<div
-		class="sm:max-md:columns-1 md:max-lg:columns-2 lg:columns-3 gap-2 w-full mt-4"
-		bind:clientWidth={width}
-	>
+	<div class="sm:max-md:columns-1 md:max-lg:columns-2 lg:columns-3 gap-2 w-full mt-4">
 		{#each filteredPhotos as photo}
 			{#if selectedTags.length === 0 || selectedTags.some((tag) => photo.tags.includes(tag))}
 				<button
@@ -49,6 +46,7 @@
 						openModal(photo);
 					}}
 					class="w-full min-w-full h-auto"
+					bind:clientWidth={width}
 				>
 					{#if width > 0}
 						<WeservImage {photo} class="w-full min-w-full h-auto" {width} />
