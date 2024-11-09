@@ -1,8 +1,7 @@
 import { getTags, listPhotos } from '$lib/resources';
 
 export async function load() {
-	const tags = await getTags();
-	const photos = await listPhotos();
+	const [tags, photos] = await Promise.all([getTags(), listPhotos()]);
 
 	return {
 		tags,
