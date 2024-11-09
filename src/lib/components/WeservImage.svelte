@@ -16,7 +16,7 @@
 
 	const publicUrl = publicPhotoUrl(photo.key);
 	let weservUrl = $derived(
-		`https://wsrv.nl/?url=${encodeURIComponent(publicUrl)}&w=${flooredWidth}&quality=${quality}`
+		`https://wsrv.nl/?url=${encodeURIComponent(publicUrl)}&w=${flooredWidth}&quality=${quality}&output=webp`
 	);
 </script>
 
