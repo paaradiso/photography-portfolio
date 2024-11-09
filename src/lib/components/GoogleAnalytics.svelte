@@ -11,6 +11,9 @@
 <svelte:head>
 	<script async {src}>
 	</script>
+
+	{@html `<script>const measurementId = '${measurementId}';</script>`}
+
 	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag() {
